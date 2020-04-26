@@ -1,0 +1,27 @@
+logging:
+  file:
+    name: ./logs/development/new-relic-api/log-development.log
+    max-size: 10MB
+    max-history: 7
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+server:
+  port: 8083
+
+spring:
+  application:
+    name: new-relic-api-example
+  profiles: development, default
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      username: root
+      password: rootpassword
+      database: teste
+
