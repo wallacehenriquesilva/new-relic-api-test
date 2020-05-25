@@ -16,4 +16,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonModel {
     private String name;
+    private int years;
 }

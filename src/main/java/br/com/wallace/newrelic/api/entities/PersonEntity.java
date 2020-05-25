@@ -23,4 +23,6 @@ public class PersonEntity {
     private String id;
 
     private String name;
+
+    private int years;
 }

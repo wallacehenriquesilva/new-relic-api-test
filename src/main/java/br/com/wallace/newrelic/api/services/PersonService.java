@@ -3,10 +3,12 @@ package br.com.wallace.newrelic.api.services;
 import br.com.wallace.newrelic.api.entities.PersonEntity;
 import br.com.wallace.newrelic.api.model.PersonModel;
 import br.com.wallace.newrelic.api.repositories.PersonRepository;
+import com.newrelic.api.agent.NewRelic;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -33,7 +35,12 @@ public class PersonService {
     }
 
     public Mono<PersonEntity> insert(final PersonModel personModel) {
-        return personRepository.save(PersonEntity.builder().name(personModel.getName()).build());
+        HashMap<String, Object> personMap = new HashMap<>();
+        personMap.put("name", personModel.getName());
+        personMap.put("years", personModel.getYears());
+        NewRelic.getAgent().getInsights().recordCustomEvent("PersonsEvent", personMap);
+
+        return personRepository.save(PersonEntity.builder().name(personModel.getName()).years(personModel.getYears()).build());
     }
 
     public Mono<PersonEntity> update(final PersonModel personModel, final String id) {
@@ -42,6 +49,7 @@ public class PersonService {
                 .filter(Objects::nonNull)
                 .map(person -> {
                     person.setName(personModel.getName());
+                    person.setYears(personModel.getYears());
                     return person;
                 })
                 .flatMap(person -> personRepository.save(person).then(Mono.just(person)));
